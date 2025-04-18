@@ -1,12 +1,15 @@
 import { BrowserOAuthClient } from '@atproto/oauth-client-browser';
-import { Button } from '@mui/material';
-import React from 'react';
+import { Button, Paper, TextField } from '@mui/material';
+import React, { useState } from 'react';
 
 export default function Login() {
-  async function handleLogin() {
+  const [handle, setHandle] = useState<string>('');
+
+  async function handleLogin(handle: string) {
+    console.log(handle);
     const client = await BrowserOAuthClient.load({
       clientId: 'https://x-post-omega.vercel.app/client-metadata.json',
-      handleResolver: 'bsky.social',
+      handleResolver: handle,
     });
 
     const result = await client.init();
@@ -15,5 +18,17 @@ export default function Login() {
       console.log(result);
     }
   }
-  return <Button onClick={handleLogin}>Login</Button>;
+  return (
+    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'row', gap: 2 }}>
+      <TextField
+        label="Text"
+        variant="outlined"
+        value={handle}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setHandle(event.target.value);
+        }}
+      />
+      <Button onClick={() => handleLogin(handle)}>Login</Button>
+    </Paper>
+  );
 }
