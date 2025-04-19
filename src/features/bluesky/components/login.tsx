@@ -8,12 +8,25 @@ export default function Login() {
 
   useEffect(() => {
     async function testProfile() {
-      if (agent)
-        return await agent.com.atproto.repo.getRecord({
+      let profile;
+
+      if (agent) {
+        profile = await agent.com.atproto.repo.getRecord({
           repo: agent.assertDid, // The user
           collection: 'app.bsky.actor.profile', // The collection
           rkey: 'self', // The record key
         });
+
+        // post
+        const postResult = await agent.post({
+          text: 'Hello world! I posted this via the API.',
+          createdAt: new Date().toISOString(),
+        });
+
+        console.log('Created post: ', postResult);
+      }
+
+      return profile;
     }
 
     const response = testProfile();
