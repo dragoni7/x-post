@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@atproto/api": "^0.15.3",
     "@atproto/oauth-client-browser": "^0.3.15",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",

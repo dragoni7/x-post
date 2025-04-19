@@ -1,24 +1,19 @@
 import { useBluesky } from '@/lib/atproto/useBluesky';
 import { Button, Paper, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function Login() {
   const [handle, setHandle] = useState<string>('');
-  const bluesky = useBluesky();
+  const { agent, authenticated, loginUser } = useBluesky();
 
-  async function handleLogin() {
-    if (bluesky) {
-      try {
-        await bluesky.signIn(handle, {
-          signal: new AbortController().signal,
-        });
-
-        console.log('Never executed');
-      } catch (err) {
-        console.log('The user aborted the authorization process by navigating "back"', err);
-      }
+  useEffect(() => {
+    async function testProfile() {
+      if (agent) return await agent.getProfile({ actor: agent.accountDid });
     }
-  }
+
+    let response = testProfile();
+    console.log(response);
+  }, [agent]);
 
   return (
     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'row', gap: 2 }}>
@@ -30,7 +25,7 @@ export default function Login() {
           setHandle(event.target.value);
         }}
       />
-      <Button onClick={handleLogin}>Login</Button>
+      <Button onClick={() => loginUser(handle)}>Login</Button>
     </Paper>
   );
 }
