@@ -42,7 +42,6 @@ export default function BlueskyProvider({ children }: { children: ReactNode }) {
         });
 
         const result = await browserOAuthClient.init();
-        console.log('got client metadata:', browserOAuthClient.clientMetadata);
         console.log('client init results:', result);
         setClient(browserOAuthClient);
 
