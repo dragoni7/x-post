@@ -15,7 +15,7 @@ export default function Login() {
 
         console.log('Never executed');
       } catch (err) {
-        console.log('The user aborted the authorization process by navigating "back"');
+        console.log('The user aborted the authorization process by navigating "back"', err);
       }
     }
   }
