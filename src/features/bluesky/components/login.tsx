@@ -8,7 +8,12 @@ export default function Login() {
 
   useEffect(() => {
     async function testProfile() {
-      if (agent) return await agent.getProfile({ actor: agent.assertDid });
+      if (agent)
+        return await agent.com.atproto.repo.getRecord({
+          repo: agent.assertDid, // The user
+          collection: 'app.bsky.actor.profile', // The collection
+          rkey: 'self', // The record key
+        });
     }
 
     const response = testProfile();
