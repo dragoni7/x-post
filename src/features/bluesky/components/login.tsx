@@ -8,7 +8,7 @@ export default function Login() {
 
   useEffect(() => {
     async function testProfile() {
-      if (agent) return await agent.getProfile({ actor: agent.accountDid });
+      if (agent) return await agent.getProfile({ actor: agent.assertDid });
     }
 
     const response = testProfile();
