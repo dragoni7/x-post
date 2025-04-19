@@ -6,7 +6,7 @@ function resultHasState(
   result: { session: OAuthSession; state: string | null } | { session: OAuthSession } | undefined
 ): result is { session: OAuthSession; state: string | null } {
   if (result === undefined) return false;
-  // @ts-expect-error
+  // @ts-expect-error state should exist here
   return result.state !== undefined;
 }
 

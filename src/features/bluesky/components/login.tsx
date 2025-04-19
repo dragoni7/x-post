@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 export default function Login() {
   const [handle, setHandle] = useState<string>('');
-  const { agent, authenticated, loginUser } = useBluesky();
+  const { agent, loginUser } = useBluesky();
 
   useEffect(() => {
     async function testProfile() {
