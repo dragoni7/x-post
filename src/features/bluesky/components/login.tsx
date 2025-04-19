@@ -11,7 +11,7 @@ export default function Login() {
       if (agent) return await agent.getProfile({ actor: agent.accountDid });
     }
 
-    let response = testProfile();
+    const response = testProfile();
     console.log(response);
   }, [agent]);
 
