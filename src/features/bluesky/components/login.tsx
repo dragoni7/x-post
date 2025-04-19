@@ -1,23 +1,25 @@
-import { BrowserOAuthClient } from '@atproto/oauth-client-browser';
+import { useBluesky } from '@/lib/atproto/useBluesky';
 import { Button, Paper, TextField } from '@mui/material';
 import React, { useState } from 'react';
 
 export default function Login() {
   const [handle, setHandle] = useState<string>('');
+  const bluesky = useBluesky();
 
-  async function handleLogin(handle: string) {
-    console.log(handle);
-    const client = await BrowserOAuthClient.load({
-      clientId: 'https://x-post-omega.vercel.app/client-metadata.json',
-      handleResolver: handle,
-    });
+  async function handleLogin() {
+    if (bluesky) {
+      try {
+        await bluesky.signIn(handle, {
+          signal: new AbortController().signal,
+        });
 
-    const result = await client.init();
-
-    if (result) {
-      console.log(result);
+        console.log('Never executed');
+      } catch (err) {
+        console.log('The user aborted the authorization process by navigating "back"');
+      }
     }
   }
+
   return (
     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'row', gap: 2 }}>
       <TextField
@@ -28,7 +30,7 @@ export default function Login() {
           setHandle(event.target.value);
         }}
       />
-      <Button onClick={() => handleLogin(handle)}>Login</Button>
+      <Button onClick={handleLogin}>Login</Button>
     </Paper>
   );
 }
