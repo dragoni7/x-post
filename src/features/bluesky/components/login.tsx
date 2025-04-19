@@ -1,37 +1,22 @@
-import { useBluesky } from '@/lib/atproto/useBluesky';
+import useBluesky from '@/lib/atproto/useBluesky';
 import { Button, Paper, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 export default function Login() {
   const [handle, setHandle] = useState<string>('');
-  const { agent, loginUser } = useBluesky();
+  const bluesky = useBluesky();
 
-  useEffect(() => {
-    async function testProfile() {
-      let profile;
-
-      if (agent) {
-        profile = await agent.com.atproto.repo.getRecord({
-          repo: agent.assertDid, // The user
-          collection: 'app.bsky.actor.profile', // The collection
-          rkey: 'self', // The record key
+  async function loginUser() {
+    if (bluesky?.client) {
+      try {
+        await bluesky?.client.signIn(handle, {
+          signal: new AbortController().signal,
         });
-
-        // post
-        const postResult = await agent.post({
-          text: 'Hello world! I posted this via the API.',
-          createdAt: new Date().toISOString(),
-        });
-
-        console.log('Created post: ', postResult);
+      } catch (err) {
+        console.log('The user aborted the authorization process by navigating "back"', err);
       }
-
-      return profile;
     }
-
-    const response = testProfile();
-    console.log(response);
-  }, [agent]);
+  }
 
   return (
     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'row', gap: 2 }}>
@@ -43,7 +28,12 @@ export default function Login() {
           setHandle(event.target.value);
         }}
       />
-      <Button onClick={() => loginUser(handle)}>Login</Button>
+      {bluesky?.loading ? (
+        <div>loading...</div>
+      ) : (
+        <div>Logged in as, {bluesky?.accountProfile?.displayName}</div>
+      )}
+      <Button onClick={loginUser}>Login</Button>
     </Paper>
   );
 }
