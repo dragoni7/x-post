@@ -1,6 +1,6 @@
 import useBluesky from '@/lib/atproto/useBluesky';
 import { Button, Paper, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 export default function Login() {
   const [handle, setHandle] = useState<string>('');
@@ -18,20 +18,21 @@ export default function Login() {
     }
   }
 
-  useEffect(() => {
-    async function testPosting() {
-      if (bluesky?.agent) {
-        const result = await bluesky?.agent.post({
-          text: 'Hello world! I posted this via the API.',
-          createdAt: new Date().toISOString(),
-        });
+  async function createPost() {
+    console.log(
+      'attempting to create bluesky post with account:',
+      bluesky?.accountProfile?.displayName
+    );
 
-        console.log('Posting result: ', result);
-      }
+    if (bluesky?.agent) {
+      const result = await bluesky?.agent.post({
+        text: 'Hello world! I posted this via the API.',
+        createdAt: new Date().toISOString(),
+      });
+
+      console.log('Posting result: ', result);
     }
-
-    testPosting();
-  }, []);
+  }
 
   return (
     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'row', gap: 2 }}>
@@ -49,6 +50,7 @@ export default function Login() {
         <div>Logged in as, {bluesky?.accountProfile?.displayName}</div>
       )}
       <Button onClick={loginUser}>Login</Button>
+      <Button onClick={createPost}>Create Test Post</Button>
     </Paper>
   );
 }
